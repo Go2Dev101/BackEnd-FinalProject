@@ -1,5 +1,5 @@
 import express from "express";
-import { createCart, getCart, updateCart } from "../controllers/cart.js";
+import { cartShippingFee, cartSummary, createCart, getCart, updateCart } from "../controllers/cart.js";
 import { authUser } from "../../middleware/authUser.js";
 
 const router = express.Router();
@@ -7,5 +7,7 @@ const router = express.Router();
 router.post("/", authUser, createCart)
 router.get("/", authUser, getCart)
 router.put("/", authUser, updateCart)
+router.get("/summary", authUser, cartSummary)
+router.get("/shipping", authUser, cartShippingFee)
 
 export default router;
