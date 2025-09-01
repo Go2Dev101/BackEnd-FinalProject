@@ -96,6 +96,12 @@ export const editUser = async (req, res, next) => {
   const { userId } = req.params;
   const { fullName, lastName, phone, address } = req.body;
 
+  if (req.user.user._id !== userId) {
+    const error = new Error("You can only edit your own profile!");
+    error.status = 403;
+    return next(error);
+  }
+
   try {
     const user = await User.findOne({ _id: userId });
 
@@ -115,6 +121,29 @@ export const editUser = async (req, res, next) => {
       error: false,
       user,
       message: "User updated successfully!",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Get user profile
+export const getUserProfile = async (req, res, next) => {
+  const userId = req.user.user._id; // Logged-in user's MongoDB _id
+
+  try {
+    const user = await User.findOne({ _id: userId });
+
+    if (!user) {
+      const error = new Error("User not found!");
+      error.status = 404;
+      return next(error);
+    }
+
+    res.status(200).json({
+      error: false,
+      user,
+      message: "User profile retrieved successfully!",
     });
   } catch (err) {
     next(err);
