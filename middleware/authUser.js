@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 // Middleware to authenticate user using JWT
-const authUser = (req, res, next) => {
+export const authUser = (req, res, next) => {
   const token = req.cookies?.accessToken;
 
   if (!token) {
