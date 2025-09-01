@@ -111,6 +111,8 @@ export const cartShippingFee = async (req, res, next) => {
       error.status = 404;
       return next(error);
     }
+
+    // Get shipping zone based on user's postal code
     const postalCode = cart.userId.address.postalCode;
     const zone = await Zone.findOne({ postalCodes: postalCode });
     if (!zone) {
@@ -118,8 +120,8 @@ export const cartShippingFee = async (req, res, next) => {
       error.status = 404;
       return next(error);
     }
-    const { items, ...summary } = calculateCart(cart, zone.shippingFee);
 
+    const { items, ...summary } = calculateCart(cart, zone.shippingFee);
 
     res.status(200).json({
       error: false,
