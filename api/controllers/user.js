@@ -26,7 +26,12 @@ export const createUser = async (req, res, next) => {
 
     res.status(201).json({
       error: false,
-      user,
+      user: {
+        _id: user._id,
+        fullName: user.fullName,
+        lastName: user.lastName,
+        email: user.email,
+      },
       message: "User created successfully!",
     });
   } catch (err) {
@@ -103,7 +108,7 @@ export const editUser = async (req, res, next) => {
   }
 
   try {
-    const user = await User.findOne({ _id: userId });
+    const user = await User.findOne({ _id: userId }).select("-password");
 
     if (!user) {
       const error = new Error("User not found!");
