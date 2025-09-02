@@ -149,3 +149,13 @@ export const getUserProfile = async (req, res, next) => {
     next(err);
   }
 };
+
+// Logout user
+export const logoutUser = (req, res, next) => {
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Strict",
+  });
+  res.status(200).json({ message: "Logged out successfully" });
+}
