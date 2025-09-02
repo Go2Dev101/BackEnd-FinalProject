@@ -49,7 +49,7 @@ export const createOrder = async (req, res, next) => {
 export const getAllOrders = async (req, res, next) => {
   try {
     const orders = await Order.find()
-      .populate("userId","fullName")
+      .populate("userId","fristName")
       .select("-items.menuId -__v")
       .sort({ createdAt: -1 });
 

@@ -5,9 +5,9 @@ import { User } from "../../models/User.js";
 
 // Create user
 export const createUser = async (req, res, next) => {
-  const { fullName, lastName, email, password } = req.body;
+  const { fristName, lastName, email, password } = req.body;
 
-  if (!fullName || !lastName || !email || !password) {
+  if (!fristName || !lastName || !email || !password) {
     const error = new Error("All fields are required!");
     error.status = 400;
     return next(error);
@@ -22,13 +22,13 @@ export const createUser = async (req, res, next) => {
       return next(error);
     }
 
-    const user = await User.create({ fullName, lastName, email, password });
+    const user = await User.create({ fristName, lastName, email, password });
 
     res.status(201).json({
       error: false,
       user: {
         _id: user._id,
-        fullName: user.fullName,
+        fristName: user.fristName,
         lastName: user.lastName,
         email: user.email,
       },
@@ -86,7 +86,7 @@ export const loginUser = async (req, res, next) => {
       message: "Login successful!",
       user: {
         _id: user._id,
-        fullName: user.fullName,
+        fristName: user.fristName,
         lastName: user.lastName,
         email: user.email,
       },
@@ -99,7 +99,7 @@ export const loginUser = async (req, res, next) => {
 // Edit user
 export const editUser = async (req, res, next) => {
   const { userId } = req.params;
-  const { fullName, lastName, phone, address } = req.body;
+  const { fristName, lastName, phone, address } = req.body;
 
   if (req.user.user._id !== userId) {
     const error = new Error("You can only edit your own profile!");
@@ -116,7 +116,7 @@ export const editUser = async (req, res, next) => {
       return next(error);
     }
 
-    if (fullName) user.fullName = fullName;
+    if (fristName) user.fristName = fristName;
     if (lastName) user.lastName = lastName;
     if (phone) user.phone = phone;
     if (address) user.address = address;
