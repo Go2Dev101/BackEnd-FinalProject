@@ -132,7 +132,9 @@ export const getUserProfile = async (req, res, next) => {
   const userId = req.user.user._id; // Logged-in user's MongoDB _id
 
   try {
-    const user = await User.findOne({ _id: userId });
+    const user = await User.findOne({ _id: userId }).select(
+      "-password -createdAt -updatedAt -__v"
+    );
 
     if (!user) {
       const error = new Error("User not found!");
@@ -158,4 +160,4 @@ export const logoutUser = (req, res, next) => {
     sameSite: "Strict",
   });
   res.status(200).json({ message: "Logged out successfully" });
-}
+};
