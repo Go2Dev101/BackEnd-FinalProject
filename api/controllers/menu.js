@@ -48,6 +48,26 @@ export const getAllMenus = async (req, res, next) => {
   }
 };
 
+// get menu by id
+export const getMenuById = async (req, res, next) => {
+  const { menuId } = req.params;
+
+  try {
+    const menu = await Menu.findOne({ _id: menuId });
+
+    if (!menu) {
+      const error = new Error("Menu not found!");
+      error.status = 404;
+      return next(error);
+    }
+    res
+      .status(200)
+      .json({ error: false, menu, message: "Menu retrieved successfully!" });
+  } catch (err) {
+    next(err);
+  }
+};
+
 // edit menu
 export const editMenu = async (req, res, next) => {
   const { menuId } = req.params;
