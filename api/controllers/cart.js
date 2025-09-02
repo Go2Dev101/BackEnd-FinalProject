@@ -78,7 +78,11 @@ export const cartSummary = async (req, res, next) => {
   const userId = req.user.user._id;
 
   try {
-    const cart = await Cart.findOne({ userId }).populate("items.menuId");
+    const cart = await Cart.findOne({ userId }).populate(
+      "items.menuId",
+      "title price"
+    );
+
     if (!cart) {
       const error = new Error("Cart not found!");
       error.status = 404;
@@ -103,8 +107,8 @@ export const cartShippingFee = async (req, res, next) => {
 
   try {
     const cart = await Cart.findOne({ userId })
-      .populate("userId")
-      .populate("items.menuId");
+      .populate("userId", "address.postalCode")
+      .populate("items.menuId", "title price");
 
     if (!cart) {
       const error = new Error("Cart not found!");
@@ -115,6 +119,7 @@ export const cartShippingFee = async (req, res, next) => {
     // Get shipping zone based on user's postal code
     const postalCode = cart.userId.address.postalCode;
     const zone = await Zone.findOne({ postalCodes: postalCode });
+
     if (!zone) {
       const error = new Error("Shipping zone not found!");
       error.status = 404;

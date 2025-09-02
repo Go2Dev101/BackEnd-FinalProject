@@ -26,9 +26,18 @@ export const createOrder = async (req, res, next) => {
     }
     const summary = calculateCart(cart, zone.shippingFee);
 
+    const order = await Order.create({
+      userId: summary.userId,
+      items: summary.items,
+      totalAmount: summary.totalAmount,
+      shippingFee: summary.shippingFee,
+      grandTotal: summary.grandTotal,
+      status: "pending",
+    });
+
     res.status(201).json({
       error: false,
-      order: { summary, status: "pending" },
+      order,
       message: "Order created successfully!",
     });
   } catch (err) {
@@ -39,12 +48,47 @@ export const createOrder = async (req, res, next) => {
 // Get all orders
 export const getAllOrders = async (req, res, next) => {
   try {
-    const orders = await Order.find().sort({ createdAt: -1 });
+    const orders = await Order.find()
+      .populate("userId","fullName")
+      .select("-items.menuId -__v")
+      .sort({ createdAt: -1 });
 
     res.status(200).json({
       error: false,
       orders,
       message: "All Orders retrieved successfully!",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Get order by id
+export const getOrderById = async (req, res, next) => {
+  const userId = req.user.user._id;
+  const { orderId } = req.params;
+
+  try {
+    const order = await Order.findOne({ _id: orderId, userId })
+      .populate("userId")
+      .select("-items.menuId");
+
+    if (!order) {
+      const error = new Error("Order not found!");
+      error.status = 404;
+      return next(error);
+    }
+    res.status(200).json({
+      error: false,
+      order: {
+        _id: order._id,
+        email: order.userId.email,
+        items: order.items,
+        totalAmount: order.totalAmount,
+        shippingFee: order.shippingFee,
+        grandTotal: order.grandTotal,
+      },
+      message: "Order retrieved successfully!",
     });
   } catch (err) {
     next(err);

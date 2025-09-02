@@ -15,6 +15,7 @@ const OrderSchema = new Schema(
     ],
     totalAmount: { type: Number, required: true, min: 0 },
     shippingFee: { type: Number, required: true, min: 0 },
+    grandTotal: { type: Number, required: true, min: 0 },
     status: {
       type: String,
       enum: ["pending", "paid", "shipped", "completed", "cancelled"],
