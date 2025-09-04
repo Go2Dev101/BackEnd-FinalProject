@@ -1,11 +1,19 @@
 import express from "express";
-import { createMenu, deleteMenu, editMenu, getAllMenus, getMenuById } from "../controllers/menu.js";
+import {
+  createMenu,
+  deleteMenu,
+  editMenu,
+  getAllMenus,
+  getMenuById,
+  getMenuBySlug,
+} from "../controllers/menu.js";
 
 const router = express.Router();
 
 router.post("/", createMenu);
 router.get("/", getAllMenus);
-router.get("/:menuId", getMenuById);
+// router.get("/:menuId", getMenuById);
+router.get("/:slug", getMenuBySlug);
 router.put("/:menuId", editMenu);
 router.delete("/:menuId", deleteMenu);
 

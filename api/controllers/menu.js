@@ -4,8 +4,8 @@ import { Menu } from "../../models/Menu.js";
 export const createMenu = async (req, res, next) => {
   const { title, slug, description, price, imageUrl, category, kcal } =
     req.body;
-  if (!title || !price || !category || !kcal) {
-    const error = new Error("Title, price, category and kcal are required!");
+  if (!title || !slug || !price || !category || !kcal) {
+    const error = new Error("Title, slug, price, category and kcal are required!");
     error.status = 400;
     return next(error);
   }
@@ -54,6 +54,26 @@ export const getMenuById = async (req, res, next) => {
 
   try {
     const menu = await Menu.findOne({ _id: menuId });
+
+    if (!menu) {
+      const error = new Error("Menu not found!");
+      error.status = 404;
+      return next(error);
+    }
+    res
+      .status(200)
+      .json({ error: false, menu, message: "Menu retrieved successfully!" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// get menu by slug
+export const getMenuBySlug = async (req, res, next) => {
+  const { slug } = req.params;
+
+  try {
+    const menu = await Menu.findOne({ slug });
 
     if (!menu) {
       const error = new Error("Menu not found!");
