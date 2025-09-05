@@ -40,7 +40,7 @@ const MenuSchema = new Schema(
     description: { type: String },
     price: { type: Number, required: true, min: 0 },
     imageUrl: { type: String },
-    category: { type: String, required: true },
+    proteins: { type: [String], default: [] },
     durationDays: { type: Number, default: 1 },
     information: { type: InformationSchema },
     nutritionFacts: { type: NutritionFactsSchema },
