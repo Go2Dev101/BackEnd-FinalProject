@@ -42,7 +42,7 @@ export const getCart = async (req, res, next) => {
 
     res
       .status(200)
-      .json({ error: false, cart, message: "Cart retrieved successfully!" });
+      .json({ error: false, cart:cart.items, message: "Cart retrieved successfully!" });
   } catch (err) {
     next(err);
   }
@@ -80,7 +80,7 @@ export const cartSummary = async (req, res, next) => {
   try {
     const cart = await Cart.findOne({ userId }).populate(
       "items.menuId",
-      "title price"
+      "title price imageUrl",
     );
 
     if (!cart) {

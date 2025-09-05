@@ -8,11 +8,11 @@ export const calculateCart = (cart, shippingFee = 0) => {
   const userId = shippingFee ? cart.userId._id : cart.userId;
   return {
     _id: cart._id,
-    userId,
     items: cart.items.map((item) => ({
       _id: item._id,
       menuId: item.menuId._id,
       name: item.menuId.title,
+      imageUrl: item.menuId.imageUrl,
       price: item.menuId.price,
       quantity: item.quantity,
       deliveryDate: item.deliveryDate,
