@@ -5,7 +5,6 @@ export const createMenu = async (req, res, next) => {
   const {
     title,
     slug,
-    description,
     price,
     imageUrl,
     durationDays,
@@ -13,11 +12,14 @@ export const createMenu = async (req, res, next) => {
     nutritionFacts,
     information,
   } = req.body;
-  // if (!title || !slug || !price || !category || !kcal) {
-  //   const error = new Error("Title, slug, price, category and kcal are required!");
-  //   error.status = 400;
-  //   return next(error);
-  // }
+
+  if (!title || !slug || !price || !durationDays || !information) {
+    const error = new Error(
+      "Title, slug, price, durationDays and information are required!"
+    );
+    error.status = 400;
+    return next(error);
+  }
   try {
     const menu = await Menu.findOne({ title });
 
