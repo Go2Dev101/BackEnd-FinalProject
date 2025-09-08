@@ -27,7 +27,7 @@ export const createOrder = async (req, res, next) => {
     const summary = calculateCart(cart, zone.shippingFee);
 
     const order = await Order.create({
-      userId: summary.userId,
+      userId: cart.userId,
       items: summary.items,
       totalAmount: summary.totalAmount,
       shippingFee: summary.shippingFee,

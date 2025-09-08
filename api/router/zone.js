@@ -5,6 +5,6 @@ const router = express.Router();
 
 router.post("/", createZone);
 router.get("/", getAllZones);
-router.post("/:zoneId", editZone);
+router.put("/:zoneId", editZone);
 
 export default router;
