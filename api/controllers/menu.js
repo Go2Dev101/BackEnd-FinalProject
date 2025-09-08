@@ -31,7 +31,6 @@ export const createMenu = async (req, res, next) => {
     const newMenu = await Menu.create({
       title,
       slug,
-      description,
       price,
       imageUrl,
       durationDays,
