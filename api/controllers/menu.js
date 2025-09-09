@@ -49,10 +49,14 @@ export const createMenu = async (req, res, next) => {
 // get all menus
 export const getAllMenus = async (req, res, next) => {
   try {
-    const menus = await Menu.find().sort({ createdAt: -1 });
+    const menus = await Menu.find()
+      .sort({ createdAt: -1 })
+      .select(
+        "_id title slug price imageUrl proteins durationDays information.description nutritionFacts.kcal"
+      );
     res.status(200).json({
       error: false,
-      menus,
+      menus: menus,
       message: "All menus retrieved successfully!",
     });
   } catch (err) {
