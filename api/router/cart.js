@@ -1,10 +1,9 @@
 import express from "express";
-import { cartShippingFee, cartSummary, createCart, getCart, updateCart } from "../controllers/cart.js";
+import { cartShippingFee, cartSummary, getCart, updateCart } from "../controllers/cart.js";
 import { authUser } from "../../middleware/authUser.js";
 
 const router = express.Router();
 
-router.post("/", authUser, createCart)
 router.get("/", authUser, getCart)
 router.put("/", authUser, updateCart)
 router.get("/summary", authUser, cartSummary)
