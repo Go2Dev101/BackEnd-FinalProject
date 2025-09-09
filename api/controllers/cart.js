@@ -15,13 +15,21 @@ export const createCart = async (req, res, next) => {
       const cart = await existingCart.save();
       return res
         .status(200)
-        .json({ error: false, cart, message: "Cart updated successfully!" });
+        .json({
+          error: false,
+          cart: cart.items,
+          message: "Cart updated successfully!",
+        });
     }
 
     const cart = await Cart.create({ userId, items });
     res
       .status(201)
-      .json({ error: false, cart, message: "Cart created successfully!" });
+      .json({
+        error: false,
+        cart: cart.items,
+        message: "Cart created successfully!",
+      });
   } catch (err) {
     next(err);
   }
@@ -42,7 +50,11 @@ export const getCart = async (req, res, next) => {
 
     res
       .status(200)
-      .json({ error: false, cart:cart.items, message: "Cart retrieved successfully!" });
+      .json({
+        error: false,
+        cart: cart.items,
+        message: "Cart retrieved successfully!",
+      });
   } catch (err) {
     next(err);
   }
@@ -67,7 +79,11 @@ export const updateCart = async (req, res, next) => {
     await cart.save();
     res
       .status(200)
-      .json({ error: false, cart, message: "Cart updated successfully!" });
+      .json({
+        error: false,
+        cart: cart.items,
+        message: "Cart updated successfully!",
+      });
   } catch (err) {
     next(err);
   }
@@ -80,7 +96,7 @@ export const cartSummary = async (req, res, next) => {
   try {
     const cart = await Cart.findOne({ userId }).populate(
       "items.menuId",
-      "title price imageUrl",
+      "title price imageUrl"
     );
 
     if (!cart) {
