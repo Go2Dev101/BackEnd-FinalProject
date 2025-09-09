@@ -13,19 +13,15 @@ export const createCart = async (req, res, next) => {
     if (existingCart) {
       existingCart.items = items;
       const cart = await existingCart.save();
-      return res.status(200).json({
-        error: false,
-        cart: cart.items,
-        message: "Cart updated successfully!",
-      });
+      return res
+        .status(200)
+        .json({ error: false, cart, message: "Cart updated successfully!" });
     }
 
     const cart = await Cart.create({ userId, items });
-    res.status(201).json({
-      error: false,
-      cart: cart.items,
-      message: "Cart created successfully!",
-    });
+    res
+      .status(201)
+      .json({ error: false, cart, message: "Cart created successfully!" });
   } catch (err) {
     next(err);
   }
@@ -36,19 +32,17 @@ export const getCart = async (req, res, next) => {
   const userId = req.user.user._id;
 
   try {
-    const cart = await Cart.findOne({ userId });
+    const user = await User.findOne({ _id: userId });
 
-    if (!cart) {
-      const error = new Error("Cart not found!");
+    if (!user) {
+      const error = new Error("User not found!");
       error.status = 404;
       return next(error);
     }
 
-    res.status(200).json({
-      error: false,
-      cart: cart.items,
-      message: "Cart retrieved successfully!",
-    });
+    res
+      .status(200)
+      .json({ error: false, cart:user.cart.items, message: "Cart retrieved successfully!" });
   } catch (err) {
     next(err);
   }
@@ -60,22 +54,20 @@ export const updateCart = async (req, res, next) => {
   const { items } = req.body;
 
   try {
-    const cart = await Cart.findOne({ userId });
+    const user = await User.findOne({ _id: userId });
 
-    if (!cart) {
-      const error = new Error("Cart not found!");
+    if (!user) {
+      const error = new Error("User not found!");
       error.status = 404;
       return next(error);
     }
 
-    cart.items = items || [];
+    user.cart.items = items || [];
 
-    await cart.save();
-    res.status(200).json({
-      error: false,
-      cart: cart.items,
-      message: "Cart updated successfully!",
-    });
+    await user.save();
+    res
+      .status(200)
+      .json({ error: false, cart:user.cart.items, message: "Cart updated successfully!" });
   } catch (err) {
     next(err);
   }
@@ -86,18 +78,18 @@ export const cartSummary = async (req, res, next) => {
   const userId = req.user.user._id;
 
   try {
-    const cart = await Cart.findOne({ userId }).populate(
-      "items.menuId",
-      "title price imageUrl"
+    const user = await User.findOne({ _id: userId }).populate(
+      "cart.items.menuId",
+      "title price imageUrl",
     );
 
-    if (!cart) {
-      const error = new Error("Cart not found!");
+    if (!user) {
+      const error = new Error("User not found!");
       error.status = 404;
       return next(error);
     }
 
-    const { shippingFee, ...summary } = calculateCart(cart);
+    const { shippingFee, ...summary } = calculateCart(user.cart);
 
     res.status(200).json({
       error: false,
