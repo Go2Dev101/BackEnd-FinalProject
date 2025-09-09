@@ -1,4 +1,4 @@
-import { Cart } from "../../models/Cart.js";
+import { User } from "../../models/User.js";
 import { Order } from "../../models/Order.js";
 import { Zone } from "../../models/Zone.js";
 import { calculateCart } from "../../service/cart.js";
@@ -8,34 +8,34 @@ export const createOrder = async (req, res, next) => {
   const userId = req.user.user._id;
 
   try {
-    const cart = await Cart.findOne({ userId })
-      .populate("userId")
-      .populate("items.menuId");
+    const user = await User.findOne({ _id: userId }).populate(
+      "cart.items.menuId"
+    );
 
-    if (!cart) {
-      const error = new Error("Cart not found!");
+    if (!user) {
+      const error = new Error("User not found!");
       error.status = 404;
       return next(error);
     }
 
     // Check cart is empty
-    if (cart.items?.length < 1) {
+    if (user.cart.items?.length < 1) {
       const error = new Error("Your cart is empty.");
       error.status = 400;
       return next(error);
     }
 
-    const postalCode = cart.userId.address.postalCode;
+    const postalCode = user.address.postalCode;
     const zone = await Zone.findOne({ postalCodes: postalCode });
     if (!zone) {
       const error = new Error("Shipping zone not found!");
       error.status = 404;
       return next(error);
     }
-    const summary = calculateCart(cart, zone.shippingFee);
+    const summary = calculateCart(user.cart, zone.shippingFee);
 
     const order = await Order.create({
-      userId: cart.userId,
+      userId: user._id,
       items: summary.items,
       totalAmount: summary.totalAmount,
       shippingFee: summary.shippingFee,

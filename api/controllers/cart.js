@@ -1,4 +1,4 @@
-import { Cart } from "../../models/Cart.js";
+import { User } from "../../models/User.js";
 import { Zone } from "../../models/Zone.js";
 import { calculateCart } from "../../service/cart.js";
 
@@ -13,23 +13,19 @@ export const createCart = async (req, res, next) => {
     if (existingCart) {
       existingCart.items = items;
       const cart = await existingCart.save();
-      return res
-        .status(200)
-        .json({
-          error: false,
-          cart: cart.items,
-          message: "Cart updated successfully!",
-        });
+      return res.status(200).json({
+        error: false,
+        cart: cart.items,
+        message: "Cart updated successfully!",
+      });
     }
 
     const cart = await Cart.create({ userId, items });
-    res
-      .status(201)
-      .json({
-        error: false,
-        cart: cart.items,
-        message: "Cart created successfully!",
-      });
+    res.status(201).json({
+      error: false,
+      cart: cart.items,
+      message: "Cart created successfully!",
+    });
   } catch (err) {
     next(err);
   }
@@ -48,13 +44,11 @@ export const getCart = async (req, res, next) => {
       return next(error);
     }
 
-    res
-      .status(200)
-      .json({
-        error: false,
-        cart: cart.items,
-        message: "Cart retrieved successfully!",
-      });
+    res.status(200).json({
+      error: false,
+      cart: cart.items,
+      message: "Cart retrieved successfully!",
+    });
   } catch (err) {
     next(err);
   }
@@ -77,13 +71,11 @@ export const updateCart = async (req, res, next) => {
     cart.items = items || [];
 
     await cart.save();
-    res
-      .status(200)
-      .json({
-        error: false,
-        cart: cart.items,
-        message: "Cart updated successfully!",
-      });
+    res.status(200).json({
+      error: false,
+      cart: cart.items,
+      message: "Cart updated successfully!",
+    });
   } catch (err) {
     next(err);
   }
@@ -122,18 +114,19 @@ export const cartShippingFee = async (req, res, next) => {
   const userId = req.user.user._id;
 
   try {
-    const cart = await Cart.findOne({ userId })
-      .populate("userId", "address.postalCode")
-      .populate("items.menuId", "title price");
+    const user = await User.findOne({ _id: userId }).populate(
+      "cart.items.menuId",
+      "title price"
+    );
 
-    if (!cart) {
-      const error = new Error("Cart not found!");
+    if (!user) {
+      const error = new Error("User not found!");
       error.status = 404;
       return next(error);
     }
 
     // Get shipping zone based on user's postal code
-    const postalCode = cart.userId.address.postalCode;
+    const postalCode = user.address.postalCode;
     const zone = await Zone.findOne({ postalCodes: postalCode });
 
     if (!zone) {
@@ -142,7 +135,7 @@ export const cartShippingFee = async (req, res, next) => {
       return next(error);
     }
 
-    const { items, ...summary } = calculateCart(cart, zone.shippingFee);
+    const { items, ...summary } = calculateCart(user.cart, zone.shippingFee);
 
     res.status(200).json({
       error: false,
