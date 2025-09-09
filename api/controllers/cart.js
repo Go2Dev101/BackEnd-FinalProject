@@ -2,30 +2,6 @@ import { User } from "../../models/User.js";
 import { Zone } from "../../models/Zone.js";
 import { calculateCart } from "../../service/cart.js";
 
-// Create a new cart
-export const createCart = async (req, res, next) => {
-  const userId = req.user.user._id;
-  const { items = [] } = req.body;
-
-  try {
-    const existingCart = await Cart.findOne({ userId });
-
-    if (existingCart) {
-      existingCart.items = items;
-      const cart = await existingCart.save();
-      return res
-        .status(200)
-        .json({ error: false, cart, message: "Cart updated successfully!" });
-    }
-
-    const cart = await Cart.create({ userId, items });
-    res
-      .status(201)
-      .json({ error: false, cart, message: "Cart created successfully!" });
-  } catch (err) {
-    next(err);
-  }
-};
 
 // Get cart
 export const getCart = async (req, res, next) => {
