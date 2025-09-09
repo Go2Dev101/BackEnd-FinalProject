@@ -7,7 +7,6 @@ export const calculateCart = (cart, shippingFee = 0) => {
   const grandTotal = totalAmount + shippingFee;
 
   return {
-    _id: cart._id,
     items: cart.items.map((item) => ({
       _id: item._id,
       menuId: item.menuId._id,
