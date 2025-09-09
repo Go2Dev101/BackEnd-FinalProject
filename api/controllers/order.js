@@ -17,6 +17,14 @@ export const createOrder = async (req, res, next) => {
       error.status = 404;
       return next(error);
     }
+
+    // Check cart is empty
+    if (cart.items?.length < 1) {
+      const error = new Error("Your cart is empty.");
+      error.status = 400;
+      return next(error);
+    }
+
     const postalCode = cart.userId.address.postalCode;
     const zone = await Zone.findOne({ postalCodes: postalCode });
     if (!zone) {
@@ -49,7 +57,7 @@ export const createOrder = async (req, res, next) => {
 export const getAllOrders = async (req, res, next) => {
   try {
     const orders = await Order.find()
-      .populate("userId","firstName")
+      .populate("userId", "firstName")
       .select("-items.menuId -__v")
       .sort({ createdAt: -1 });
 
