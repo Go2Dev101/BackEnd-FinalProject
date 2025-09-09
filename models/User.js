@@ -20,6 +20,22 @@ const UserSchema = new Schema(
     password: { type: String, required: true },
     phone: { type: String },
     address: { type: AddressSchema },
+    cart: {
+      items: {
+        type: [
+          {
+            menuId: {
+              type: Schema.Types.ObjectId,
+              ref: "Menu",
+              required: true,
+            },
+            quantity: { type: Number, required: true, min: 1 },
+            deliveryDate: { type: String },
+          },
+        ],
+        default: [],
+      },
+    },
   },
   { timestamps: true }
 );
