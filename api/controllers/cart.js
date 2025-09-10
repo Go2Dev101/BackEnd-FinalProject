@@ -2,13 +2,15 @@ import { User } from "../../models/User.js";
 import { Zone } from "../../models/Zone.js";
 import { calculateCart } from "../../service/cart.js";
 
-
 // Get cart
 export const getCart = async (req, res, next) => {
   const userId = req.user.user._id;
 
   try {
-    const user = await User.findOne({ _id: userId });
+    const user = await User.findOne({ _id: userId }).populate(
+      "cart.items.menuId",
+      "title price imageUrl"
+    );
 
     if (!user) {
       const error = new Error("User not found!");
@@ -16,9 +18,11 @@ export const getCart = async (req, res, next) => {
       return next(error);
     }
 
-    res
-      .status(200)
-      .json({ error: false, cart:user.cart.items, message: "Cart retrieved successfully!" });
+    res.status(200).json({
+      error: false,
+      cart: user.cart.items,
+      message: "Cart retrieved successfully!",
+    });
   } catch (err) {
     next(err);
   }
@@ -38,12 +42,19 @@ export const updateCart = async (req, res, next) => {
       return next(error);
     }
 
-    user.cart.items = items || [];
+    const newitems = items.map((item) => ({
+      menuId: item.menuId._id,
+      quantity: item.quantity,
+      deliveryDate: item.deliveryDate,
+    }));
+    user.cart.items = newitems || [];
 
     await user.save();
-    res
-      .status(200)
-      .json({ error: false, cart:user.cart.items, message: "Cart updated successfully!" });
+    res.status(200).json({
+      error: false,
+      cart: user.cart.items,
+      message: "Cart updated successfully!",
+    });
   } catch (err) {
     next(err);
   }
@@ -56,7 +67,7 @@ export const cartSummary = async (req, res, next) => {
   try {
     const user = await User.findOne({ _id: userId }).populate(
       "cart.items.menuId",
-      "title price imageUrl",
+      "title price imageUrl"
     );
 
     if (!user) {
