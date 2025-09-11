@@ -9,7 +9,7 @@ export const getCart = async (req, res, next) => {
   try {
     const user = await User.findOne({ _id: userId }).populate(
       "cart.items.menuId",
-      "title price imageUrl"
+      "title price imageUrl durationDays"
     );
 
     if (!user) {
