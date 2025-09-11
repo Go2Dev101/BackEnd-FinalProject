@@ -26,6 +26,7 @@ const corsOption = {
     "http://localhost:5173",
     "http://localhost:5174",
     "http://localhost:5175",
+    "https://front-end-final-project-cyan.vercel.app/",
   ],
   credentials: true, // ✅ allow cookies to be sent
 };
