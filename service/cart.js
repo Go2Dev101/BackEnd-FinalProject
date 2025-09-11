@@ -1,13 +1,16 @@
 export const calculateCart = (cart, shippingFee = 0) => {
-  const totalAmount = cart.items.reduce(
+  const totalAmount = cart.reduce(
     (sum, item) => sum + item.menuId.price * item.quantity,
     0
   );
-
+  const totalItems = cart.reduce(
+    (n, item) => n + (Number(item.quantity) || 0),
+    0
+  );
   const grandTotal = totalAmount + shippingFee;
 
   return {
-    items: cart.items.map((item) => ({
+    items: cart.map((item) => ({
       _id: item._id,
       menuId: item.menuId._id,
       name: item.menuId.title,
@@ -16,7 +19,7 @@ export const calculateCart = (cart, shippingFee = 0) => {
       quantity: item.quantity,
       deliveryDate: item.deliveryDate,
     })),
-    totalItems: cart.items.length,
+    totalItems,
     totalAmount,
     shippingFee,
     grandTotal,

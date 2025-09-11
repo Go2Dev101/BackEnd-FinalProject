@@ -32,7 +32,7 @@ const corsOption = {
 app.use(cors(corsOption));
 
 // Apply rate limiting middleware to all requests
-app.use(limiter);
+// app.use(limiter);
 
 // Middleware to parse JSON bodies and cookies
 app.use(express.json());

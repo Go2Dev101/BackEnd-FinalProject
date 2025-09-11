@@ -32,7 +32,7 @@ export const createOrder = async (req, res, next) => {
       error.status = 404;
       return next(error);
     }
-    const summary = calculateCart(user.cart, zone.shippingFee);
+    const summary = calculateCart(user.cart.items, zone.shippingFee);
 
     const order = await Order.create({
       userId: user._id,

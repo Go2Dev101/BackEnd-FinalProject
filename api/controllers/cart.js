@@ -76,7 +76,7 @@ export const cartSummary = async (req, res, next) => {
       return next(error);
     }
 
-    const { shippingFee, ...summary } = calculateCart(user.cart);
+    const { shippingFee, ...summary } = calculateCart(user.cart.items);
 
     res.status(200).json({
       error: false,
@@ -114,7 +114,7 @@ export const cartShippingFee = async (req, res, next) => {
       return next(error);
     }
 
-    const { items, ...summary } = calculateCart(user.cart, zone.shippingFee);
+    const { items, ...summary } = calculateCart(user.cart.items, zone.shippingFee);
 
     res.status(200).json({
       error: false,
