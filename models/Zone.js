@@ -17,9 +17,10 @@ const ZoneSchema = new Schema(
   { timestamps: true }
 );
 
-ZoneSchema.pre("save", async function(next) {
+ZoneSchema.pre("save", async function (next) {
   const overlapping = await Zone.findOne({
-    postalCodes: { $in: this.postalCodes }
+    _id: { $ne: this._id }, //Not Equal  this id
+    postalCodes: { $in: this.postalCodes },
   });
   if (overlapping) {
     return next(new Error("Some postal codes already exist in another zone"));
