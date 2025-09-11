@@ -102,3 +102,33 @@ export const getOrderById = async (req, res, next) => {
     next(err);
   }
 };
+
+// Update order status by id
+export const updateOrderStatusById = async (req, res, next) => {
+  const userId = req.user.user._id;
+  const { orderId } = req.params;
+  const { status } = req.body;
+
+  try {
+    const order = await Order.findOne({ _id: orderId, userId }).select(
+      "-userId -items.menuId"
+    );
+
+    if (!order) {
+      const error = new Error("Order not found!");
+      error.status = 404;
+      return next(error);
+    }
+
+    if (status !== undefined) order.status = status;
+
+    await order.save();
+    res.status(200).json({
+      error: false,
+      order,
+      message: "Order updated successfully!",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
