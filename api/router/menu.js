@@ -6,12 +6,14 @@ import {
   getAllMenus,
   getMenuById,
   getMenuBySlug,
+  popularMenu,
 } from "../controllers/menu.js";
 
 const router = express.Router();
 
 router.post("/", createMenu);
 router.get("/", getAllMenus);
+router.get("/popular", popularMenu);
 // router.get("/:menuId", getMenuById);
 router.get("/:slug", getMenuBySlug);
 router.put("/:menuId", editMenu);

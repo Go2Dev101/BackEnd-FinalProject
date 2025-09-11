@@ -171,3 +171,21 @@ export const deleteMenu = async (req, res, next) => {
     next(err);
   }
 };
+// popular menu
+export const popularMenu = async (req, res, next) => {
+  try {
+    const menus = await Menu.find()
+      .sort({ durationDays: 1 })
+      .limit(9)
+      .select(
+        "_id title slug price imageUrl proteins durationDays information.description nutritionFacts.kcal"
+      );
+    res.status(200).json({
+      error: false,
+      menus: menus,
+      message: "Popular menus retrieved successfully!",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
