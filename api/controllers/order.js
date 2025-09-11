@@ -79,7 +79,7 @@ export const getOrderById = async (req, res, next) => {
   try {
     const order = await Order.findOne({ _id: orderId, userId })
       .populate("userId")
-      .select("-items.menuId");
+      .populate("items.menuId", "imageUrl -_id")
 
     if (!order) {
       const error = new Error("Order not found!");
