@@ -95,6 +95,7 @@ export const getOrderById = async (req, res, next) => {
         totalAmount: order.totalAmount,
         shippingFee: order.shippingFee,
         grandTotal: order.grandTotal,
+        createdAt: order.createdAt,
       },
       message: "Order retrieved successfully!",
     });
