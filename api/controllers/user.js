@@ -138,7 +138,7 @@ export const getUserProfile = async (req, res, next) => {
 
   try {
     const user = await User.findOne({ _id: userId }).select(
-      "-password -createdAt -updatedAt -__v"
+      "-password -createdAt -updatedAt -__v -cart"
     );
 
     if (!user) {
