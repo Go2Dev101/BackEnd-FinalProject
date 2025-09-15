@@ -78,6 +78,7 @@ export const loginUser = async (req, res, next) => {
       httpOnly: true,
       secure: isProd,
       sameSite: isProd ? "none" : "lax",
+      path:"/",
       maxAge: 60 * 60 * 1000, // 1 hour
     });
 
