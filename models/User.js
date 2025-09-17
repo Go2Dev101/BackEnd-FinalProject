@@ -21,7 +21,6 @@ const UserSchema = new Schema(
     phone: { type: String },
     address: { type: AddressSchema },
     cart: {
-      items: {
         type: [
           {
             menuId: {
@@ -34,7 +33,6 @@ const UserSchema = new Schema(
           },
         ],
         default: [],
-      },
     },
   },
   { timestamps: true }

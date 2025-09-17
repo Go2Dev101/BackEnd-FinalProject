@@ -8,7 +8,7 @@ export const getCart = async (req, res, next) => {
 
   try {
     const user = await User.findOne({ _id: userId }).populate(
-      "cart.items.menuId",
+      "cart.menuId",
       "title price imageUrl durationDays"
     );
 
@@ -20,7 +20,7 @@ export const getCart = async (req, res, next) => {
 
     res.status(200).json({
       error: false,
-      cart: user.cart.items,
+      cart: user.cart,
       message: "Cart retrieved successfully!",
     });
   } catch (err) {
@@ -47,12 +47,12 @@ export const updateCart = async (req, res, next) => {
       quantity: item.quantity,
       deliveryDate: item.deliveryDate,
     }));
-    user.cart.items = newitems || [];
+    user.cart = newitems || [];
 
     await user.save();
     res.status(200).json({
       error: false,
-      cart: user.cart.items,
+      cart: user.cart,
       message: "Cart updated successfully!",
     });
   } catch (err) {
@@ -66,7 +66,7 @@ export const cartSummary = async (req, res, next) => {
 
   try {
     const user = await User.findOne({ _id: userId }).populate(
-      "cart.items.menuId",
+      "cart.menuId",
       "title price imageUrl"
     );
 
@@ -76,7 +76,7 @@ export const cartSummary = async (req, res, next) => {
       return next(error);
     }
 
-    const { shippingFee, ...summary } = calculateCart(user.cart.items);
+    const { shippingFee, ...summary } = calculateCart(user.cart);
 
     res.status(200).json({
       error: false,
@@ -94,7 +94,7 @@ export const cartShippingFee = async (req, res, next) => {
 
   try {
     const user = await User.findOne({ _id: userId }).populate(
-      "cart.items.menuId",
+      "cart.menuId",
       "title price"
     );
 
@@ -114,7 +114,7 @@ export const cartShippingFee = async (req, res, next) => {
       return next(error);
     }
 
-    const { items, ...summary } = calculateCart(user.cart.items, zone.shippingFee);
+    const { items, ...summary } = calculateCart(user.cart, zone.shippingFee);
 
     res.status(200).json({
       error: false,
