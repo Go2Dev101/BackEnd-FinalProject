@@ -9,7 +9,7 @@ export const createOrder = async (req, res, next) => {
 
   try {
     const user = await User.findOne({ _id: userId }).populate(
-      "cart.items.menuId"
+      "cart.menuId"
     );
 
     if (!user) {
@@ -19,7 +19,7 @@ export const createOrder = async (req, res, next) => {
     }
 
     // Check cart is empty
-    if (user.cart.items?.length < 1) {
+    if (user.cart?.length < 1) {
       const error = new Error("Your cart is empty.");
       error.status = 400;
       return next(error);
@@ -32,11 +32,12 @@ export const createOrder = async (req, res, next) => {
       error.status = 404;
       return next(error);
     }
-    const summary = calculateCart(user.cart.items, zone.shippingFee);
+    const summary = calculateCart(user.cart, zone.shippingFee);
 
     const order = await Order.create({
       userId: user._id,
       items: summary.items,
+      totalItems: summary.totalItems,
       totalAmount: summary.totalAmount,
       shippingFee: summary.shippingFee,
       grandTotal: summary.grandTotal,
@@ -65,6 +66,25 @@ export const getAllOrders = async (req, res, next) => {
       error: false,
       orders,
       message: "All Orders retrieved successfully!",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+//Get orderHistory
+export const getOrderHistory = async (req, res, next) => {
+  const userId = req.user.user._id;
+
+  try {
+    const ordersHistory = await Order.find()
+      .select("totalItems grandTotal status createdAt")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      error: false,
+      ordersHistory,
+      message: "Order History retrieved successfully!",
     });
   } catch (err) {
     next(err);

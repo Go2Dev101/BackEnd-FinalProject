@@ -13,6 +13,7 @@ const OrderSchema = new Schema(
       },
       { _id: false },
     ],
+    totalItems: { type: Number, required: true, min: 0 },
     totalAmount: { type: Number, required: true, min: 0 },
     shippingFee: { type: Number, required: true, min: 0 },
     grandTotal: { type: Number, required: true, min: 0 },
