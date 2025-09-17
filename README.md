@@ -14,7 +14,6 @@
 ---
 ## About
 Daily Lean is a meal-delivery fullstack application focused on healthy eating. Our mission is to offer nutritious meals that are **easy to browse**, **easy to order**, and **always delivered fresh**.
-This repository contains the **frontend** part of the project. For backend, please check the [BackEnd-FinalProject](https://github.com/Go2Dev101/BackEnd-FinalProject) repository.
 ---
 ## Features
 - Browse through a catalog of healthy meals with images, descriptions, and nutritional info
