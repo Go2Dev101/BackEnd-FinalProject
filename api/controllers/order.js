@@ -8,9 +8,7 @@ export const createOrder = async (req, res, next) => {
   const userId = req.user.user._id;
 
   try {
-    const user = await User.findOne({ _id: userId }).populate(
-      "cart.menuId"
-    );
+    const user = await User.findOne({ _id: userId }).populate("cart.menuId");
 
     if (!user) {
       const error = new Error("User not found!");
@@ -77,7 +75,7 @@ export const getOrderHistory = async (req, res, next) => {
   const userId = req.user.user._id;
 
   try {
-    const ordersHistory = await Order.find()
+    const ordersHistory = await Order.find({ userId })
       .select("totalItems grandTotal status createdAt")
       .sort({ createdAt: -1 });
 
@@ -99,7 +97,7 @@ export const getOrderById = async (req, res, next) => {
   try {
     const order = await Order.findOne({ _id: orderId, userId })
       .populate("userId")
-      .populate("items.menuId", "imageUrl -_id")
+      .populate("items.menuId", "imageUrl -_id");
 
     if (!order) {
       const error = new Error("Order not found!");
